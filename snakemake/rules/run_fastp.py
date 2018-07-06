@@ -17,22 +17,17 @@ import os
 import fnmatch
 from snakemake.exceptions import MissingInputException
 
-home = os.environ['HOME']
-CONFIGDIR = config['CONFIGDIR']
-
-configfile: CONFIGDIR + "config.json"
-
 rule run_fastp_se:
     version:
         0.1
     threads:
         4
     input:
-        read1 = "fastq/{unit}{unit}_R1_001.fastq.gz"
+        read1 = "{runID}/fastq/{unit}_R1_001.fastq.gz"
     output:
-        trimmed_read1 = "trimmed/{unit}_R1_001.fastq.gz",
-        report_html = "trimmed/{unit}_report.html",
-        report_json = "trimmed/{unit}_report.json"
+        trimmed_read1 = "{runID}/{outdir}/trimmed/{unit}_R1_001.fastq.gz",
+        report_html = "{runID}/{outdir}/trimmed/{unit}_report.html",
+        report_json = "{runID}/{outdir}/trimmed/{unit}_report.json"
     shell:
         "fastp -i {input.read1}\
                -o {output.trimmed_read1}\
@@ -49,10 +44,9 @@ rule bowtie2_pe:
     threads:
         8
     input:
-        trimmed_read1 = "trimmed/{unit}.end1.fastq.gz",
-        trimmed_read2 = "trimmed/{unit}.end2.fastq.gz"
+        trimmed_read1 = "{runID}/{outdir}/trimmed/{unit}_R1_001.fastq.gz"
     output:
-        "{outdir}/{reference_version}/bowtie2/{unit}.bam"
+        "{runID}/{outdir}/{reference_version}/bowtie2/{unit}.bam"
     shell:
         """
             bowtie2 \
@@ -66,7 +60,6 @@ rule bowtie2_pe:
             --rg 'SM:{wildcards.unit}' \
             --rg 'PL:Illumina' \
             --rg 'PU:NA' \
-            -1 {input.trimmed_read1} \
-            -2 {input.trimmed_read2} \
+            -U {input.trimmed_read1} \
             | samtools view -Sb - > {output}
-        "
+        """
