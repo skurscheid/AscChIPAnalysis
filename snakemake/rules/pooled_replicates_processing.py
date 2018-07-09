@@ -27,7 +27,7 @@ rule index_merged:
     version:
         0.1
     input:
-        "{runID}/{outdir}/{reference_version}/bowtie2/{sample}.final.bam"
+        "{runID}/{outdir}/{reference_version}/bowtie2/merged/{sample}.bam"
     output:
         protected("{runID}/{outdir}/{reference_version}/bowtie2/merged/{sample}.bam.bai")
     shell:
