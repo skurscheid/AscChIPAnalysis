@@ -27,7 +27,7 @@ rule index_merged:
     version:
         0.1
     input:
-        rules.bam_merge.output
+        "{runID}/{outdir}/{reference_version}/bowtie2/{sample}.final.bam"
     output:
         protected("{runID}/{outdir}/{reference_version}/bowtie2/merged/{sample}.bam.bai")
     shell:
