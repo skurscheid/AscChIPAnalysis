@@ -49,7 +49,7 @@ rule all:
                outdir = config["processed_dir"],
                reference_version = REF_VERSION,
                treatment = SAMPLES[3:5],
-               control = SAMPLES[5])
+               control = SAMPLES[5]),
         expand("{runID}/{outdir}/{reference_version}/deepTools/bamCompare/{treatment}_vs_{control}.bw",
                runID = "run1",
                outdir = config["processed_dir"],
