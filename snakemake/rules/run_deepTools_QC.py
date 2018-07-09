@@ -44,7 +44,7 @@ rule plotFingerprint_deduplicated:
                        runID = "run1",
                        outdir = config["processed_dir"],
                        reference_version = REF_VERSION,
-                       unit = UNITS)
+                       unit = UNITS),
         index = expand("{runID}/{outdir}/{reference_version}/bowtie2/{unit}.final.bam.bai",
                        runID = "run1",
                        outdir = config["processed_dir"],
@@ -77,7 +77,7 @@ rule multiBamSummary_deduplicated:
                        runID = "run1",
                        outdir = config["processed_dir"],
                        reference_version = REF_VERSION,
-                       unit = UNITS)
+                       unit = UNITS),
         index = expand("{runID}/{outdir}/{reference_version}/bowtie2/{unit}.final.bam.bai",
                        runID = "run1",
                        outdir = config["processed_dir"],
