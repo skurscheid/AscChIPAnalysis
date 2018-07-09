@@ -45,8 +45,8 @@ rule bam_compare_pooled_replicates:
     input:
         control = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{control}.bam",
         treatment = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam",
-        control.index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{control}.bam.bai",
-        treatment.index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam.bai"
+        control_index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{control}.bam.bai",
+        treatment_index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam.bai"
     output:
         "{runID}/{outdir}/{reference_version}/deepTools/bamCompare/{treatment}_vs_{control}.bw"
     shell:
