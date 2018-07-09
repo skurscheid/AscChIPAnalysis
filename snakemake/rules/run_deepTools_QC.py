@@ -13,23 +13,6 @@ Rules for running deepTools QC/QC on ChIP-Seq data
 For usage, include this in your workflow.
 """
 
-# samples for processing
-UNITS = ["ASC-ad-D0-H3K9me2-1_S7",
-         "ASC-ad-D0-H3K9me2-2_S8",
-         "ASC-ad-D0-H3K9me3-1_S7",
-         "ASC-ad-D0-H3K9me3-2_S8",
-         "ASC-ad-D0-INP-LMNB-1_S6",
-         "ASC-ad-D1-H3K9me2-1_S1",
-         "ASC-ad-D1-H3K9me2-2_S2",
-         "ASC-ad-D1-H3K9me3-1_S3",
-         "ASC-ad-D1-H3K9me3-2_S4",
-         "ASC-ad-D1-INP-LMNB-1_S3",
-         "ASC-ad-D3-H3K9me2-1_S5",
-         "ASC-ad-D3-H3K9me2-2_S6",
-         "ASC-ad-D3-H3K9me3-1_S7",
-         "ASC-ad-D3-H3K9me3-2_S8",
-         "ASC-ad-D3-INP-LMNB-1_S6"]
-
 # rules
 rule plotFingerprint_deduplicated:
     params:

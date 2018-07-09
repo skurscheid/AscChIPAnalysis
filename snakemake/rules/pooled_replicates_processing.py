@@ -18,6 +18,59 @@ def cli_parameters_computeMatrix(wildcards):
         a["--referencePoint"] = wildcards.referencePoint
     return(a)
 
+
+rule bam_compare_pooled_replicates:
+    version:
+        0.1
+    params:
+        deepTools_dir = home + config["deepTools_dir"],
+        ignore = config["program_parameters"]["deepTools"]["ignoreForNormalization"],
+        program_parameters = cli_parameters_bamCoverage
+    threads:
+        lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
+    input:
+        control = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{control}.bam",
+        treatment = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{treatment}.bam"
+    output:
+        "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{mode}/{duplicates}/{scaleFactors}/{treatment}_vs_{control}_{mode}_{ratio}_RPKM.bw"
+    shell:
+        """
+            {params.deepTools_dir}/bamCompare --bamfile1 {input.treatment} \
+                                              --bamfile2 {input.control} \
+                                              --outFileName {output} \
+                                              --scaleFactorsMethod {wildcards.scaleFactors} \
+                                              --ratio {wildcards.ratio} \
+                                              --numberOfProcessors {threads} \
+                                              --normalizeUsingRPKM \
+                                              --ignoreForNormalization {params.ignore}
+        """
+
+rule bam_coverage_pooled_replicates:
+    version:
+        0.2
+    params:
+        deepTools_dir = home + config["deepTools_dir"],
+        ignore = config["program_parameters"]["deepTools"]["ignoreForNormalization"],
+        program_parameters = cli_parameters_bamCoverage,
+        normalization = lambda wildcards: cli_parameters_normalization(wildcards)
+    threads:
+        lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
+    input:
+        bam = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{sample_group}.bam",
+        bai = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{sample_group}.bam.bai"
+    output:
+        bigwig = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{mode}/{duplicates}/{sample_group}_{mode}_{norm}.bw"
+    shell:
+        """
+            {params.deepTools_dir}/bamCoverage --bam {input.bam} \
+                                               --outFileName {output.bigwig} \
+                                               --outFileFormat bigwig \
+                                               {params.program_parameters} \
+                                               --numberOfProcessors {threads} \
+                                               {params.normalization} \
+                                               --ignoreForNormalization {params.ignore}
+        """
+
 rule run_computeMatrix_pooled_replicates:
     input:
         expand("{assayID}/{runID}/{outdir}/{reference_version}/{application}/computeMatrix/{command}/{duplicates}/{referencePoint}/{sampleGroup}_{region}_{mode}.{norm}.matrix.gz",

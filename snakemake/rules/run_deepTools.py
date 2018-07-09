@@ -65,9 +65,10 @@ rule bamCoverage:
     threads:
         lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
     input:
-        bam = lambda wildcards: wildcards.assayID + "/" + wildcards.runID + "/" + wildcards.outdir + "/" + wildcards.reference_version + "/bowtie2/" + wildcards.duplicates + "/" +  wildcards.sample + ".Q" + config["alignment_quality"] + ".sorted.bam"
+        bam = "{runID}/{outdir}/{reference_version}/bowtie2/{unit}.final.bam",
+        index = "{runID}/{outdir}/{reference_version}/bowtie2/{unit}.final.bam.bai"
     output:
-        "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{mode}/{duplicates}/{sample}_{mode}_{norm}.bw"
+        "{runID}/{outdir}/{reference_version}/deepTools/bamCoverage/{unit}_RPKM.bw"
     shell:
         """
         {params.deepTools_dir}/bamCoverage --bam {input.bam} \
@@ -77,102 +78,4 @@ rule bamCoverage:
                                            --numberOfProcessors {threads} \
                                            --normalizeUsingRPKM \
                                            --ignoreForNormalization {params.ignore}
-        """
-
-rule computeMatrix:
-    version:
-        0.2
-    params:
-        deepTools_dir = home + config["deepTools_dir"],
-        program_parameters = lambda wildcards: ' '.join("{!s}={!s}".format(key, val.strip("\\'")) for (key, val) in cli_parameters_computeMatrix(wildcards).items())
-    threads:
-        lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
-    input:
-        file = get_computeMatrix_input,
-        region = lambda wildcards: home + config["program_parameters"]["deepTools"]["regionFiles"][wildcards.reference_version][wildcards.region]
-    output:
-        matrix_gz = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{command}/{duplicates}/{referencePoint}/{region}_{mode}.matrix.gz"
-    shell:
-        """
-            {params.deepTools_dir}/computeMatrix {wildcards.command} \
-                                                 --regionsFileName {input.region} \
-                                                 --scoreFileName {input.file} \
-                                                 --missingDataAsZero \
-                                                 --skipZeros \
-                                                 --numberOfProcessors {threads} \
-                                                 {params.program_parameters} \
-                                                 --outFileName {output.matrix_gz}
-        """
-
-
-rule plotProfile:
-    version:
-        0.1
-    params:
-        deepTools_dir = home + config["deepTools_dir"],
-    input:
-        matrix_gz = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/computeMatrix/{command}/{duplicates}/{referencePoint}/{region}_{mode}.matrix.gz"
-    output:
-        figure = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{command}/{duplicates}/{referencePoint}/{plotType}.{mode}.{region}.pdf",
-        data = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{command}/{duplicates}/{referencePoint}/{plotType}.{mode}.{region}.data",
-        regions = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{command}/{duplicates}/{referencePoint}/{plotType}.{mode}.{region}.bed"
-    shell:
-        """
-            {params.deepTools_dir}/plotProfile --matrixFile {input.matrix_gz} \
-                                               --outFileName {output.figure} \
-                                               --outFileNameData {output.data} \
-                                               --outFileSortedRegions {output.regions} \
-                                               --plotType {wildcards.plotType}
-        """
-
-rule bam_compare_pooled_replicates:
-    version:
-        0.1
-    params:
-        deepTools_dir = home + config["deepTools_dir"],
-        ignore = config["program_parameters"]["deepTools"]["ignoreForNormalization"],
-        program_parameters = cli_parameters_bamCoverage
-    threads:
-        lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
-    input:
-        control = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{control}.bam",
-        treatment = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{treatment}.bam"
-    output:
-        "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{mode}/{duplicates}/{scaleFactors}/{treatment}_vs_{control}_{mode}_{ratio}_RPKM.bw"
-    shell:
-        """
-            {params.deepTools_dir}/bamCompare --bamfile1 {input.treatment} \
-                                              --bamfile2 {input.control} \
-                                              --outFileName {output} \
-                                              --scaleFactorsMethod {wildcards.scaleFactors} \
-                                              --ratio {wildcards.ratio} \
-                                              --numberOfProcessors {threads} \
-                                              --normalizeUsingRPKM \
-                                              --ignoreForNormalization {params.ignore}
-        """
-
-rule bam_coverage_pooled_replicates:
-    version:
-        0.2
-    params:
-        deepTools_dir = home + config["deepTools_dir"],
-        ignore = config["program_parameters"]["deepTools"]["ignoreForNormalization"],
-        program_parameters = cli_parameters_bamCoverage,
-        normalization = lambda wildcards: cli_parameters_normalization(wildcards)
-    threads:
-        lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
-    input:
-        bam = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{sample_group}.bam",
-        bai = "{assayID}/{runID}/{outdir}/{reference_version}/samtools/merge/{duplicates}/{sample_group}.bam.bai"
-    output:
-        bigwig = "{assayID}/{runID}/{outdir}/{reference_version}/{application}/{tool}/{mode}/{duplicates}/{sample_group}_{mode}_{norm}.bw"
-    shell:
-        """
-            {params.deepTools_dir}/bamCoverage --bam {input.bam} \
-                                               --outFileName {output.bigwig} \
-                                               --outFileFormat bigwig \
-                                               {params.program_parameters} \
-                                               --numberOfProcessors {threads} \
-                                               {params.normalization} \
-                                               --ignoreForNormalization {params.ignore}
         """
