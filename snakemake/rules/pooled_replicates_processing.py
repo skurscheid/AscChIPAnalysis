@@ -1,12 +1,6 @@
 from snakemake.exceptions import MissingInputException
 import os
 
-def cli_parameters_computeMatrix(wildcards):
-    a = config["program_parameters"][wildcards["application"]]["computeMatrix"][wildcards["command"]]
-    if wildcards["command"] == "reference-point":
-        a["--referencePoint"] = wildcards.referencePoint
-    return(a)
-
 rule bam_merge:
     version:
         0.4
@@ -50,7 +44,6 @@ rule bam_compare_pooled_replicates:
         0.1
     params:
         deepTools_dir = home + config["deepTools_dir"],
-        program_parameters = cli_parameters_bamCoverage,
         extension = "150",
         ratio = "log2",
     threads:
@@ -64,6 +57,9 @@ rule bam_compare_pooled_replicates:
         """
             {params.deepTools_dir}/bamCompare --bamfile1 {input.treatment} \
                                               --bamfile2 {input.control} \
+                                              --centerReads \
+                                              --binSize 50 \
+                                              --smoothLength 100 \
                                               --outFileName {output} \
                                               --extendReads {params.extension} \
                                               --ratio {params.ratio} \
