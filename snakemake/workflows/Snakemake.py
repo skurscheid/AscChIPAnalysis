@@ -21,14 +21,6 @@ WORKFLOWDIR = config["WORKFLOWDIR"]
 wrapper_dir = home + "/Development/snakemake-wrappers/bio"
 include_prefix = WORKFLOWDIR + "/snakemake/rules/"
 
-include:
-    include_prefix + "run_fastp.py"
-include:
-    include_prefix + "bam_processing.py"
-include:
-    include_prefix + "run_deepTools_QC.py"
-include:
-    include_prefix + "run_deepTools.py"
 # samples/units
 UNITS = ["ASC-ad-D0-H3K9me2-1_S7",
         "ASC-ad-D0-H3K9me2-2_S8",
@@ -46,6 +38,15 @@ UNITS = ["ASC-ad-D0-H3K9me2-1_S7",
         "ASC-ad-D3-H3K9me3-2_S8",
         "ASC-ad-D3-INP-LMNB-1_S6"]
 
+# includes
+include:
+    include_prefix + "run_fastp.py"
+include:
+    include_prefix + "bam_processing.py"
+include:
+    include_prefix + "run_deepTools_QC.py"
+include:
+    include_prefix + "run_deepTools.py"
 
 rule all:
     input:
