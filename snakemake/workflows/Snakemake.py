@@ -13,7 +13,7 @@ localrules:
 
 # define global variables such as reference version of genome so that it can be accessed
 # throughout the whole worfklow
-REF_GENOME = config["references"]["genomes"][0]
+REF_GENOME = config["references"]["genomes"][1]
 REF_VERSION = config["references"][REF_GENOME]["version"][2]
 
 home = os.environ['HOME']
