@@ -14,13 +14,7 @@ rule bam_merge:
                                        outdir = wildcards["outdir"],
                                        reference_version = wildcards["reference_version"],
                                        unit = config["samples"]["ChIP-Seq"][wildcards["type"]][wildcards["sample"]],
-                                       suffix = ["bam"]),
-        index = lambda wildcards: expand("{runID}/{outdir}/{reference_version}/bowtie2/{unit}.final.{suffix}",
-                                       runID = wildcards["runID"],
-                                       outdir = wildcards["outdir"],
-                                       reference_version = wildcards["reference_version"],
-                                       unit = config["samples"]["ChIP-Seq"][wildcards["type"]][wildcards["sample"]],
-                                       suffix = ["bam.bai"]),
+                                       suffix = ["bam"])
     output:
         protected("{runID}/{outdir}/{reference_version}/bowtie2/merged/{sample}.bam")
     run:
