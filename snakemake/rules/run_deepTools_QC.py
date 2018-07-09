@@ -1,6 +1,6 @@
 __author__ = "Sebastian Kurscheid (sebastian.kurscheid@anu.edu.au)"
 __license__ = "MIT"
-__date__ = "2017-01-11"
+__date__ = "2018-07-09"
 
 # vim: syntax=python tabstop=4 expandtab
 # coding: utf-8
