@@ -39,7 +39,7 @@ rule bam_compare_pooled_replicates:
     params:
         deepTools_dir = home + config["deepTools_dir"],
         extension = "150",
-        ratio = "log2",
+        ratio = "log2"
     threads:
         lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
     input:
@@ -58,6 +58,5 @@ rule bam_compare_pooled_replicates:
                                               --extendReads {params.extension} \
                                               --ratio {params.ratio} \
                                               --numberOfProcessors {threads} \
-                                              --normalizeUsingRPKM \
-                                              --ignoreForNormalization {params.ignore}
+                                              --normalizeUsingRPKM
         """
