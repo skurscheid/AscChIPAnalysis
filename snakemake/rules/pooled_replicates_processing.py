@@ -13,7 +13,7 @@ rule bam_merge:
                                        runID = wildcards["runID"],
                                        outdir = wildcards["outdir"],
                                        reference_version = wildcards["reference_version"],
-                                       unit = config["samples"]["ChIP-Seq"][wildcards["type"]][wildcards["sample"]],
+                                       unit = config["samples"]["ChIP-Seq"]["replicates"][wildcards["sample"]],
                                        suffix = ["bam"])
     output:
         protected("{runID}/{outdir}/{reference_version}/bowtie2/merged/{sample}.bam")
