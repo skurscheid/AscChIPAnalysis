@@ -28,7 +28,7 @@ UNITS = ["ASC-ad-D0-H3K9me2-1_S7",
          "ASC-ad-D3-H3K9me2-2_S6",
          "ASC-ad-D3-H3K9me3-1_S7",
          "ASC-ad-D3-H3K9me3-2_S8",
-         "ASC-ad-D3-INP-LMNB-1_S6"])
+         "ASC-ad-D3-INP-LMNB-1_S6"]
 
 # rules
 rule plotFingerprint_deduplicated:
