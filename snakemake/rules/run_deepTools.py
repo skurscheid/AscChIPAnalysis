@@ -59,7 +59,8 @@ rule bamCoverage:
     params:
         deepTools_dir = home + config["deepTools_dir"],
         ignore = config["program_parameters"]["deepTools"]["ignoreForNormalization"],
-        program_parameters = cli_parameters_bamCoverage
+        program_parameters = cli_parameters_bamCoverage,
+        extension = "200"
     threads:
         lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
     input:
@@ -72,6 +73,7 @@ rule bamCoverage:
         {params.deepTools_dir}/bamCoverage --bam {input.bam} \
                                            --outFileName {output} \
                                            --outFileFormat bigwig \
+                                           --extendReads {params.extension}
                                            {params.program_parameters} \
                                            --numberOfProcessors {threads} \
                                            --normalizeUsingRPKM \
