@@ -27,7 +27,7 @@ def cli_parameters_normalization(wildcards):
     return(a)
 
 def cli_parameters_bamCoverage(wildcards):
-    a = config["program_parameters"][wildcards["application"]][wildcards["tool"]][wildcards["mode"]]
+    a = config["program_parameters"]["deepTools"]["bamCoverage"]["normal"]
     b = str()
     for (key, val) in a.items():
         if val == " ":
