@@ -36,8 +36,6 @@ def cli_parameters_bamCoverage(wildcards):
         else:
             f = key + "=" + val + " "
             b = b + f
-    if wildcards["mode"] == "MNase":
-        b = b + "--MNase"
     return(b.rstrip())
 
 def get_computeMatrix_input(wildcards):
