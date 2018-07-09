@@ -1,4 +1,4 @@
-_author__ = "Sebastian Kurscheid (sebastian.kurscheid@anu.edu.au)"
+__author__ = "Sebastian Kurscheid (sebastian.kurscheid@anu.edu.au)"
 __license__ = "MIT"
 __date__ = "2018-07-06"
 
