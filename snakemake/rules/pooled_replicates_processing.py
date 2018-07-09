@@ -44,7 +44,9 @@ rule bam_compare_pooled_replicates:
         lambda wildcards: int(str(config["program_parameters"]["deepTools"]["threads"]).strip("['']"))
     input:
         control = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{control}.bam",
-        treatment = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam"
+        treatment = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam",
+        control.index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{control}.bam.bai",
+        treatment.index = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{treatment}.bam.bai"
     output:
         "{runID}/{outdir}/{reference_version}/deepTools/bamCompare/{treatment}_vs_{control}.bw"
     shell:
