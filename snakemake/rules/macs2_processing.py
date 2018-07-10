@@ -26,8 +26,8 @@ rule macs2_predictd:
                                               --gsize hs\
                                               --mfold 3 50\
                                               --outdir {output}\
-                                              ${1}>>{log}\
-                                              ${2}>>{log}
+                                              $1>>{log}\
+                                              $2>>{log}
         """
 
 
