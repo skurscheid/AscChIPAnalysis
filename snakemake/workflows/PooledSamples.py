@@ -60,4 +60,4 @@ rule all:
                runID = "run1",
                outdir = config["processed_dir"],
                reference_version = REF_VERSION,
-               ChIP = SAMPLES[0:2], SAMPLES[3:5], SAMPLES[6:8])
+               ChIP = SAMPLES[0:2] + SAMPLES[3:5] + SAMPLES[6:8])
