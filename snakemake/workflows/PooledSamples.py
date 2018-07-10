@@ -81,7 +81,7 @@ rule all:
            outdir = config["processed_dir"],
            reference_version = REF_VERSION,
            ChIP = SAMPLES[6:8],
-           Input = SAMPLES[8])
+           Input = SAMPLES[8]),
         # callpeak, broad peaks
         expand("{runID}/{outdir}/{reference_version}/macs2/callpeak_broad/{ChIP}_vs_{Input}/",
                runID = "run1",
