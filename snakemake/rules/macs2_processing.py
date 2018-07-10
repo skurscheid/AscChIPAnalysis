@@ -11,18 +11,6 @@ Rules for running MACS2 for ChIP peak calling.
 For usage, include this in your workflow.
 """
 
-def get_replicates_input(wildcards):
-    fn = []
-    for i in config["samples"][][wildcards.Input][wildcards.sample + "_" + wildcards.Input + "_" + wildcards.digest]:
-        fn.append("processed_data/hg38/duplicates_removed/" + i + ".DeDup.sorted.fastq_q20.bam")
-    return(fn)
-
-def get_replicates_chip(wildcards):
-    fn = []
-    for i in config["samples"][wildcards.digest][wildcards.ChIP][wildcards.sample + "_" + wildcards.ChIP + "_" + wildcards.digest]:
-        fn.append("processed_data/hg38/duplicates_removed/" + i + ".DeDup.sorted.fastq_q20.bam")
-    return(fn)
-
 rule macs2_predictd:
     params:
         macs2_dir = config["macs2_dir"]
