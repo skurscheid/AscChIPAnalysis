@@ -13,7 +13,7 @@ For usage, include this in your workflow.
 
 rule macs2_predictd:
     params:
-        macs2_dir = config["macs2_dir"]
+        macs2_dir = home + config["macs2_dir"]
     input:
         chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
     output:
