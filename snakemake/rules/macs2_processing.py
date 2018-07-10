@@ -29,22 +29,23 @@ rule macs2_predictd:
         """
 
 
-# rule macs2_callpeak:
-#     params:
-#         extsize = config["parameters"]["macs2"]["extsize"],
-#         macs2_dir = config["macs2_dir"]
-#     input:
-#         input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
-#         chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
-#     output:
-#         "{runID}/{outdir}/{reference_version}/macs2/callpeak/{digest}/{ChIP}_vs_{Input}/{sample}"
-#     shell:
-#         """
-#             {params.macs2_dir}/macs2 callpeak -B \
-#                                               -t {input.chip}\
-#                                               -c {input.input}\
-#                                               -n {wildcards.sample}\
-#                                               --nomodel\
-#                                               --extsize {params.extsize}\
-#                                               --outdir {output}
-#         """
+rule macs2_callpeak_cutoff_analysis:
+    params:
+        extsize = 180, # estimated from predictd output
+        macs2_dir = home + config["macs2_dir"]
+    input:
+        input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
+        chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
+    output:
+        "{runID}/{outdir}/{reference_version}/macs2/callpeak/{ChIP}_vs_{Input}/{ChIP}"
+    shell:
+        """
+            {params.macs2_dir}/macs2 callpeak -B \
+                                              -t {input.chip}\
+                                              -c {input.input}\
+                                              -n {wildcards.sample}\
+                                              --nomodel\
+                                              --extsize {params.extsize}\
+                                              --cutoff-analysis\
+                                              --outdir {output}
+        """
