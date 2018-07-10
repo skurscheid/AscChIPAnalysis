@@ -25,7 +25,7 @@ rule macs2_predictd:
             {params.macs2_dir}/macs2 predictd --ifile {input.chip}\
                                               --gsize hs\
                                               --mfold 3 50\
-                                              --outdir {output} 1 >> {log} 2 >> {log}
+                                              --outdir {output} $1 >> {log} $2 >> {log}
         """
 
 
