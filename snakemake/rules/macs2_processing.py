@@ -49,3 +49,24 @@ rule macs2_callpeak_cutoff_analysis:
                                               --cutoff-analysis\
                                               --outdir {output}
         """
+rule macs2_call_broadpeaks:
+    params:
+        extsize = 180, # estimated from predictd output
+        macs2_dir = home + config["macs2_dir"]
+    input:
+        input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
+        chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
+    output:
+        "{runID}/{outdir}/{reference_version}/macs2/callpeak_broad/{ChIP}_vs_{Input}/"
+    shell:
+        """
+            {params.macs2_dir}/macs2 callpeak -B \
+                                              -t {input.chip}\
+                                              -c {input.input}\
+                                              -n {wildcards.ChIP}\
+                                              --nomodel\
+                                              --extsize {params.extsize}\
+                                              --broad\
+                                              --mfold 3 50\
+                                              --outdir {output}
+        """
