@@ -55,4 +55,9 @@ rule all:
                outdir = config["processed_dir"],
                reference_version = REF_VERSION,
                treatment = SAMPLES[6:8],
-               control = SAMPLES[8])
+               control = SAMPLES[8]),
+        expand("{runID}/{outdir}/{reference_version}/macs2/predictd/{ChIP}",
+               runID = "run1",
+               outdir = config["processed_dir"],
+               reference_version = REF_VERSION,
+               ChIP = SAMPLES[0:2], SAMPLES[3:5], SAMPLES[6:8])

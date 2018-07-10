@@ -13,7 +13,7 @@ For usage, include this in your workflow.
 
 def get_replicates_input(wildcards):
     fn = []
-    for i in config["samples"][wildcards.digest][wildcards.Input][wildcards.sample + "_" + wildcards.Input + "_" + wildcards.digest]:
+    for i in config["samples"][][wildcards.Input][wildcards.sample + "_" + wildcards.Input + "_" + wildcards.digest]:
         fn.append("processed_data/hg38/duplicates_removed/" + i + ".DeDup.sorted.fastq_q20.bam")
     return(fn)
 
@@ -23,24 +23,33 @@ def get_replicates_chip(wildcards):
         fn.append("processed_data/hg38/duplicates_removed/" + i + ".DeDup.sorted.fastq_q20.bam")
     return(fn)
 
-
-rule macs2_callpeak_dummy:
+rule macs2_predictd:
+    params:
+        macs2_dir = config["macs2_dir"]
     input:
-        expand("processed_data/hg38/macs2/callpeak/{digest}/{ChIP}_vs_{Input}/{sample}",
-               digest = "H",
-               ChIP = "H2AZ",
-               Input = "Input",
-               sample = config["samples"]["sample"])
+        chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
+    output:
+        "{runID}/{outdir}/{reference_version}/macs2/predictd/{ChIP}"
+    log:
+        "{runID}/{outdir}/{reference_version}/macs2/predictd/{ChIP}/log.txt"
+    shell:
+        """
+            {params.macs2_dir}/macs2 predictd --ifile {input.chip}\
+                                              --gsize hs\
+                                              --mfold 3 50\
+                                              --outdir {output} 1 >> {log} 2 >> {log}
+        """
+
 
 rule macs2_callpeak:
     params:
         extsize = config["parameters"]["macs2"]["extsize"],
         macs2_dir = config["macs2_dir"]
     input:
-        input = get_replicates_input,
-        chip = get_replicates_chip
+        input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
+        chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
     output:
-        "processed_data/hg38/macs2/callpeak/{digest}/{ChIP}_vs_{Input}/{sample}"
+        "{runID}/{outdir}/{reference_version}/macs2/callpeak/{digest}/{ChIP}_vs_{Input}/{sample}"
     shell:
         """
             {params.macs2_dir}/macs2 callpeak -B \
