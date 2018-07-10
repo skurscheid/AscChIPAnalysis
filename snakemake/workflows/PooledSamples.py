@@ -24,6 +24,8 @@ include_prefix = WORKFLOWDIR + "/snakemake/rules/"
 # includes
 include:
     include_prefix + "pooled_replicates_processing.py"
+include:
+    include_prefix + "macs2_processing.py"
 
 
 SAMPLES = ["ASC-ad-D0-H3K9me2",
