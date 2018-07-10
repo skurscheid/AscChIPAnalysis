@@ -43,7 +43,7 @@ rule macs2_callpeak_cutoff_analysis:
             {params.macs2_dir}/macs2 callpeak -B \
                                               -t {input.chip}\
                                               -c {input.input}\
-                                              -n {wildcards.chip}\
+                                              -n {wildcards.ChIP}\
                                               --nomodel\
                                               --extsize {params.extsize}\
                                               --cutoff-analysis\
