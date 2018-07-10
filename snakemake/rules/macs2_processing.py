@@ -22,6 +22,7 @@ rule macs2_predictd:
         "{runID}/{outdir}/{reference_version}/macs2/predictd/{ChIP}/log.txt"
     shell:
         """
+            if [ ! -d {output} ]; then mkdir -p {output}; fi;\
             {params.macs2_dir}/macs2 predictd --ifile {input.chip}\
                                               --gsize hs\
                                               --mfold 3 50\
