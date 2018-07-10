@@ -37,7 +37,7 @@ rule macs2_callpeak_cutoff_analysis:
         input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
         chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
     output:
-        "{runID}/{outdir}/{reference_version}/macs2/callpeak/{ChIP}_vs_{Input}/{ChIP}"
+        "{runID}/{outdir}/{reference_version}/macs2/callpeak/{ChIP}_vs_{Input}/"
     shell:
         """
             {params.macs2_dir}/macs2 callpeak -B \
