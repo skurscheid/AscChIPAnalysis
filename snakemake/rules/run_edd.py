@@ -26,7 +26,7 @@ rule run_edd:
         binSize = "", # don't set for autoestimation
         numTrials = "10000", #number of Monte Carlo trials 10000 default
         fdr = "0.1",
-        gapPenalty = ,
+        gapPenalty = "", # using default - autodetect
         eddBinDir = home + config["edd_dir"]
     shell:
         """"

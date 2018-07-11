@@ -26,7 +26,8 @@ include:
     include_prefix + "pooled_replicates_processing.py"
 include:
     include_prefix + "macs2_processing.py"
-
+include:
+    include_prefix + "run_edd.py"
 
 SAMPLES = ["ASC-ad-D0-H3K9me2",
           "ASC-ad-D0-H3K9me3",
