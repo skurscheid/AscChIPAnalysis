@@ -7,8 +7,8 @@ __date__ = "2018-07-11"
 
 
 """
-Rules for running EDD for enriched domain detection.
-For usage, include this in your workflow.
+    Rules for running EDD for enriched domain detection.
+    For usage, include this in your workflow.
 """
 
 rule run_edd:
@@ -18,6 +18,7 @@ rule run_edd:
     output:
         "{runID}/{outdir}/{reference_version}/edd/{ChIP}_vs_{Input}/"
     log:
+        "run_edd_{ChIP}_vs_{Input}.log"
     threads:
         8
     params:
@@ -35,5 +36,5 @@ rule run_edd:
                                    --fdr {params.fdr}\
                                    --nprocs {threads}\
                                    --write-log-ratios\
-                                   --write-bin-scores
+                                   --write-bin-scores 1>>{log} 2>>{log}
         """"
