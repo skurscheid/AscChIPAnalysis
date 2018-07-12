@@ -13,7 +13,7 @@ __date__ = "2018-07-11"
 
 rule run_edd:
     input:
-        input = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
+        control = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{Input}.bam",
         chip = "{runID}/{outdir}/{reference_version}/bowtie2/merged/{ChIP}.bam"
     output:
         "{runID}/{outdir}/{reference_version}/edd/{ChIP}_vs_{Input}/"
@@ -22,19 +22,17 @@ rule run_edd:
     threads:
         8
     params:
-        chromSizes = home + config[REF_GENOME]["chromSizesUCSC"],
-        gaps = home + config[REF_GENOME]["gapsUCSC"],
-        binSize = "", # don't set for autoestimation
-        numTrials = "10000", #number of Monte Carlo trials 10000 default
+        chromSizes = home + config["references"][REF_GENOME]["chromSizesUCSC"],
+        gaps = home + config["references"][REF_GENOME]["gapsUCSC"],
+        numTrials = "10000",
         fdr = "0.1",
-        gapPenalty = "", # using default - autodetect
         eddBinDir = home + config["edd_dir"]
     shell:
         """"
-            {params.eddBinDir}/edd {params.chromSizes} {params.gaps} {input.chip} {input.input} {output}\
+            {params.eddBinDir}/edd {params.chromSizes} {params.gaps} {input.chip} {input.control} {output}\
                                    -n {params.numTrials}\
                                    --fdr {params.fdr}\
                                    --nprocs {threads}\
                                    --write-log-ratios\
-                                   --write-bin-scores 1>>{log} 2>>{log}
+                                   --write-bin-scores 1>>{log} 2>>{log}\
         """"
